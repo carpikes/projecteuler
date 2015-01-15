@@ -1,18 +1,26 @@
 /* 2015-01-15 
- * compile with -std=c++11 -Wall -Werror
+ * compile with -O3 -std=c++11 -Wall -Werror
  */
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-#include <iterator>
 #include <vector>
+#include <array>
 
-using namespace std;
+using std::array;
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::ifstream;
+using std::string;
+using std::vector;
 
 const int tableWidth = 9;
 const int tableHeight = 9;
 
-void printSudoku(const int *sudoku) {
+typedef array<int, tableWidth * tableHeight> board;
+
+void printSudoku(const board &sudoku) {
     for(int i=0;i<9;i++) {
         for(int j=0;j<9;j++)
             cout << sudoku[i*tableWidth + j] << " ";
@@ -20,7 +28,7 @@ void printSudoku(const int *sudoku) {
     }
 }
 
-vector<int> getChoices(const int *sudoku, const int x, const int y) {
+vector<int> getChoices(const board &sudoku, const int x, const int y) {
     vector<int> arr;
     int i, n;
 
@@ -38,7 +46,7 @@ vector<int> getChoices(const int *sudoku, const int x, const int y) {
     return arr;
 }
 
-bool solveSudoku(int *sudoku, int x, int y) {
+bool solveSudoku(board &sudoku, const int x, const int y) {
     if(y == tableHeight)
         return true;
 
@@ -64,7 +72,8 @@ bool solveSudoku(int *sudoku, int x, int y) {
 int main() {
     ifstream in("in/96.txt"); 
     string line;
-    int i,j, sudoku[tableWidth * tableHeight];
+    board sudoku;
+    int i, j;
 
     int sum = 0;
     while(getline(in, line)) {
